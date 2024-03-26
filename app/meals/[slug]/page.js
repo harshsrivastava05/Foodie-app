@@ -1,6 +1,12 @@
 import Image from "next/image";
 import classes from "./page.module.css";
 import { dummyMeals } from "@/component/data/meals-data";
+import Notfound from "../not-found";
+
+export const metadata = {
+  title: "All meals",
+  description: "Browse meals.",
+};
 
 const findMealIndexBySlug = (slug) => {
   const index = dummyMeals.findIndex((meal) => meal.slug === slug);
@@ -18,13 +24,17 @@ const getMealInfoByIndex = (index) => {
 export default function Mealslug({ params }) {
   const mealindex = findMealIndexBySlug(params.slug);
   const meal = getMealInfoByIndex(mealindex);
-  meal.instructions = meal.instructions.replace(/\n/g,'<br />')
 
+  if (!meal) {
+    return <Notfound />;
+  }
+
+  meal.instructions = meal.instructions.replace(/\n/g, "<br />");
   return (
     <>
       <header className={classes.header}>
         <div className={classes.image}>
-          <Image  src={meal.image} fill />
+          <Image src={meal.image} fill />
         </div>
         <div className={classes.headerText}>
           <h1>{meal.title}</h1>
